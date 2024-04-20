@@ -9,7 +9,7 @@ public abstract class BaseDTO {
     private Long id;
     private Date created_at;
     private Date updated_at;
-    private String created_by;
-    private String updated_by;
+    private Long created_by;
+    private Long updated_by;
     private Boolean is_deleted;
 }
