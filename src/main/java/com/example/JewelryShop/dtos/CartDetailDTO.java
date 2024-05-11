@@ -4,10 +4,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-public class ReviewDTO {
-    private Long user_id;
+public class CartDetailDTO {
     private Long jewelry_item_id;
-    private String text;
-    private String[] images;
-    private Float rating;
+    private Double total_price;
+    private Integer quantity;
 }

@@ -1,38 +1,41 @@
 package com.example.JewelryShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table
 public class JewelryItem extends BaseModel {
-    @Column(name = "sku_code", unique = true)
-    @NotNull(message = "SKU Code is mandatory")
+    @Column(name = "sku_code", unique = true, nullable = false)
     private String sku_code;
 
-    @Column(name = "name")
-    @NotNull(message = "Name is mandatory")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "description")
     private String description = "";
 
-    @Column(name = "category_id")
-    @NotNull(message = "Category is mandatory")
-    private Long category_id;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    @Column(name = "material")
-    @NotNull(message = "Material is mandatory")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    private Coupon coupon;
+
+    @Column(name = "material", nullable = false)
     private String material;
 
-    @Column(name = "color")
+    @Column(name = "color", nullable = false)
     private String color;
 
     @Column(name = "metal_color")
@@ -44,11 +47,10 @@ public class JewelryItem extends BaseModel {
     @Column(name = "image")
     private String image = "https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg";
 
-    @Column(name = "reviews")
-    private Long[] reviews;
+    @OneToMany(mappedBy = "jewelry_item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
 
-    @Column(name = "price")
-    @NotNull(message = "Price is mandatory")
+    @Column(name = "price", nullable = false)
     private Double price;
 
     @Column(name = "quantity")

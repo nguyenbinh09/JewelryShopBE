@@ -1,13 +1,15 @@
 package com.example.JewelryShop.dtos;
 
+import com.example.JewelryShop.models.WishlistDetail;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class CustomerDTO extends BaseDTO {
+public class CustomerDTO {
     private Long user_id;
-    private Long[] wish_list;
+    private List<WishlistDetail> wishlist;
     private Long cart_id;
     private Long[] order_history;
 }

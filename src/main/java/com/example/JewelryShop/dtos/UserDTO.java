@@ -4,8 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class UserDTO extends BaseDTO {
+public class UserDTO {
     private Long account_id;
     private String avatar;
     private Boolean status;

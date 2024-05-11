@@ -1,8 +1,6 @@
 package com.example.JewelryShop.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,9 +12,11 @@ public class Employee extends BaseModel {
     @Column(name = "code", unique = true)
     private String code;
 
-    @Column(name = "user_id", unique = true)
-    private Long user_id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    @Column(name = "role_id")
-    private Long role_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private Role role;
 }

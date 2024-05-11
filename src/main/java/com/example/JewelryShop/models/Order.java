@@ -1,39 +1,47 @@
 package com.example.JewelryShop.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
-@Table
+@Table(name = "`order`")
 public class Order extends BaseModel {
-    @Column(name = "ordered_items")
-    private Long[] ordered_items;
+    @JsonManagedReference
+    @JsonIgnore
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<OrderDetail> orderDetail = new ArrayList<>();
 
-    @Column(name = "purchaser", unique = true)
-    private Long purchaser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @Column(name = "completed_time")
     private Date completed_time;
 
     @Column(name = "status")
-    private String status;
+    private String status = "Ordering";
 
     @Column(name = "total_price")
-    private Double total_price;
+    private Double total_price = 0.0;
 
-    @Column(name = "price")
-    private Double price;
+    @Column(name = "amount")
+    private Double amount = 0.0;
 
-    @Column(name = "shipping_contact")
-    private Long shipping_contact;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_method_id", referencedColumnName = "id")
+    private PaymentMethod paymentMethod;
 
-    @Column(name = "payment_method")
-    private Long payment_method;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contact_id", referencedColumnName = "id")
+    private Contact contact;
 }

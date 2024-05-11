@@ -1,5 +1,6 @@
 package com.example.JewelryShop.models;
 
+import com.example.JewelryShop.dtos.CategoryDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -12,7 +13,9 @@ import lombok.EqualsAndHashCode;
 @Data
 @Table
 public class Category extends BaseModel {
-    @Column(name = "type")
-    @NotNull(message = "Type's name is mandatory")
-    private String type;
+    @Column(name = "code", unique = true, nullable = false)
+    private String code;
+
+    @Column(name = "name", nullable = false)
+    private String name;
 }

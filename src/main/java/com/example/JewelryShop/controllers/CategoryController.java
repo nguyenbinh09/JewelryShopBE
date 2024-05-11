@@ -1,11 +1,10 @@
 package com.example.JewelryShop.controllers;
 
-import com.example.JewelryShop.dtos.JewelryItemDTO;
-import com.example.JewelryShop.exceptions.BadRequestException;
+import com.example.JewelryShop.dtos.CategoryDTO;
 import com.example.JewelryShop.exceptions.InternalServerErrorException;
 import com.example.JewelryShop.exceptions.NotFoundException;
-import com.example.JewelryShop.models.JewelryItem;
-import com.example.JewelryShop.services.JewelryItemService;
+import com.example.JewelryShop.models.Category;
+import com.example.JewelryShop.services.CategoryService;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,32 +14,32 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @CrossOrigin
 @RestController
-@RequestMapping(path = "api/v1/jewelryItem")
+@RequestMapping(path = "api/v1/category")
 @Validated
-public class JewelryItemController {
+public class CategoryController {
     @Autowired
-    private JewelryItemService jewelryItemService;
+    private CategoryService categoryService;
+
     @Autowired
     private ModelMapper modelMapper;
 
     @GetMapping
-    public List<JewelryItem> getJewelryItems() {
+    public List<Category> getCategories() {
         try {
-            return jewelryItemService.getJewelryItems();
+            return categoryService.getCategories();
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
-            throw new InternalServerErrorException(e.getMessage());
+            throw new InternalServerErrorException();
         }
     }
 
     @GetMapping("/{id}")
-    public JewelryItem getJewelryItemById(@PathVariable("id") Long id) {
+    public Category getCategoryById(@PathVariable("id") Long id) {
         try {
-            return jewelryItemService.getJewelryItemById(id);
+            return categoryService.getCategoryById(id);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -49,10 +48,10 @@ public class JewelryItemController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addNewJewelryItem(@RequestBody @Valid JewelryItemDTO JewelryItemDTO) {
+    public ResponseEntity<?> addNewCategory(@RequestBody @Valid CategoryDTO categoryDTO) {
         try {
-            return jewelryItemService.addNewJewelryItem(JewelryItemDTO);
-        } catch (BadRequestException | NotFoundException e) {
+            return categoryService.addNewCategory(categoryDTO);
+        } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
@@ -60,10 +59,10 @@ public class JewelryItemController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateJewelryItem(@PathVariable("id") Long id, @RequestBody JewelryItemDTO JewelryItemDTO) {
+    public ResponseEntity<?> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryDTO categoryDTO) {
         try {
-            return jewelryItemService.updateJewelryItem(id, JewelryItemDTO);
-        } catch (BadRequestException | NotFoundException e) {
+            return categoryService.updateCategory(id, categoryDTO);
+        } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
