@@ -6,8 +6,7 @@ import lombok.EqualsAndHashCode;
 import java.util.Date;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class CouponDTO extends BaseDTO {
+public class CouponDTO {
     private String code;
     private Double discount_percentage;
     private Date expiration_date;

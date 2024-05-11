@@ -1,27 +1,30 @@
 package com.example.JewelryShop.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table
 public class Review extends BaseModel {
-    @Column(name = "user_id", unique = true)
-    private Long user_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
-    @Column(name = "jewelry_item_id", unique = true)
-    private Long jewelry_item_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "jewelry_item_id")
+    private JewelryItem jewelry_item;
 
     @Column(name = "text")
     private String text;
 
     @Column(name = "images")
-    private String[] images;
+    private List<String> images = new ArrayList<>();
 
     @Column(name = "rating")
     private Float rating;

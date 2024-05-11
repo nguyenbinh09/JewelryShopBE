@@ -1,16 +1,20 @@
 package com.example.JewelryShop.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Data
 @Table
 public class Cart extends BaseModel {
-    @Column(name = "items")
-    private Long[] items;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartDetail> items = new ArrayList<>();
+
+    @OneToOne(mappedBy = "cart")
+    private Customer customer;
 }

@@ -1,8 +1,6 @@
 package com.example.JewelryShop.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,6 +20,10 @@ public class PersonalInformation extends BaseModel {
     @Column(name = "gender")
     private String gender;
 
-    @Column(name = "contact_id", unique = true)
-    private Long contact_id;
+    @OneToOne(mappedBy = "information")
+    private User user;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "contact_id", referencedColumnName = "id")
+    private Contact contact;
 }

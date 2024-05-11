@@ -6,8 +6,7 @@ import lombok.EqualsAndHashCode;
 import java.util.Date;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class PersonalInformationDTO extends BaseDTO {
+public class PersonalInformationDTO {
     private String name;
     private Date birthday;
     private String gender;

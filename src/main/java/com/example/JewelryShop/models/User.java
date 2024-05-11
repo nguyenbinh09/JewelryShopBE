@@ -20,8 +20,15 @@ public class User extends BaseModel {
     @Column(name = "status")
     private Boolean status;
 
-    @Column(name = "information_id", unique = true)
-    private Long information_id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "information_id", referencedColumnName = "id")
+    private PersonalInformation information;
+
+    @OneToOne(mappedBy = "user")
+    private Employee employee;
+
+    @OneToOne(mappedBy = "user")
+    private Customer customer;
 
     @Column(name = "is_employee")
     private Boolean is_employee;
