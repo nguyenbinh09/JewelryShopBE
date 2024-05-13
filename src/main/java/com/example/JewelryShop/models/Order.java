@@ -17,7 +17,6 @@ import java.util.List;
 @Table(name = "`order`")
 public class Order extends BaseModel {
     @JsonManagedReference
-    @JsonIgnore
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetail = new ArrayList<>();
 
