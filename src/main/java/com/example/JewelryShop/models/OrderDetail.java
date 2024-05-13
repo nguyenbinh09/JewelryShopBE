@@ -17,7 +17,7 @@ public class OrderDetail extends BaseModel {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")
-    @JsonIgnore
+    @JsonBackReference
     private Order order;
 
     @Column(name = "total_price")

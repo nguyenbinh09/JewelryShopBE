@@ -1,6 +1,7 @@
 package com.example.JewelryShop.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -22,13 +23,12 @@ public class JewelryItem extends BaseModel {
 
     @Column(name = "description")
     private String description = "";
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
 

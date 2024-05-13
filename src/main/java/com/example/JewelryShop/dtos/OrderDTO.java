@@ -12,11 +12,15 @@ import java.util.Date;
 public class OrderDTO {
     @NotNull(message = "Ordered items are mandatory")
     private OrderDetailDTO[] ordered_items;
-    //@NotNull(message = "Purchaser is mandatory")
+    @NotNull(message = "Purchaser is mandatory")
     private Long purchaser;
+    @NotNull(message = "Total price is mandatory")
     private Double total_price;
+    @NotNull(message = "Amount is mandatory")
     private Double amount;
+    @NotNull(message = "Shipping contact is mandatory")
     private ContactDTO shipping_contact;
+    @NotNull(message = "Payment method is mandatory")
     private Long payment_method;
 
     public Order toEntity() {

@@ -40,10 +40,7 @@ public class OrderService {
     }
 
     public Order getOrderById(Long id) {
-        Optional<Order> order = orderRepository.findById(id);
-        if (order.isEmpty())
-            throw new NotFoundException("Could not find order with id " + id);
-        return order.get();
+        return orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Could not find order with id " + id));
     }
 
     @Transactional
@@ -67,15 +64,13 @@ public class OrderService {
                 listOrderDetail.add(orderDetail);
             }
         }
-//        List<OrderDetail> list = orderDetailRepository.saveAll(listOrderDetail);
         order.setOrderDetail(listOrderDetail);
-//        Customer customer = customerRepository.findById(orderDTO.getPurchaser()).orElseThrow(() -> new NotFoundException("Could not find customer with id " + orderDTO.getPurchaser()));
-//        order.setCustomer(customer);
-
-
+        Customer customer = customerRepository.findById(orderDTO.getPurchaser()).orElseThrow(() -> new NotFoundException("Could not find customer with id " + orderDTO.getPurchaser()));
+        order.setCustomer(customer);
         Contact shippingContact = orderDTO.getShipping_contact().toEntity();
         order.setContact(shippingContact);
         orderRepository.save(order);
         return ResponseEntity.ok("Order created successfully");
     }
+    
 }
