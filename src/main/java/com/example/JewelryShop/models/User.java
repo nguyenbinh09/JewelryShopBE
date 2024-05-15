@@ -11,11 +11,12 @@ import lombok.Setter;
 @Table
 @EqualsAndHashCode(callSuper = true)
 public class User extends BaseModel {
-    @Column(name = "account_id", unique = true)
-    private Long account_id;
+    @Column(name = "account_id", unique = true, nullable = false)
+    private String account_id;
 
-    @Column(name = "avatar")
-    private String avatar = "https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg";
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "avatar_id", referencedColumnName = "id")
+    private Image avatar = new Image("https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg");
 
     @Column(name = "status")
     private Boolean status;
@@ -31,5 +32,5 @@ public class User extends BaseModel {
     private Customer customer;
 
     @Column(name = "is_employee")
-    private Boolean is_employee;
+    private Boolean is_employee = false;
 }

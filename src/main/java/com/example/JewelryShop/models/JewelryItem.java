@@ -16,14 +16,14 @@ import java.util.List;
 @Table
 public class JewelryItem extends BaseModel {
     @Column(name = "sku_code", unique = true, nullable = false)
-    private String sku_code;
+    private String sku_code = "";
 
     @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "description")
     private String description = "";
-    
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -44,11 +44,11 @@ public class JewelryItem extends BaseModel {
     @Column(name = "stone_color")
     private String stone_color;
 
-    @Column(name = "image")
-    private String image = "https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg";
-
     @OneToMany(mappedBy = "jewelry_item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "jewelry_item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
     @Column(name = "price", nullable = false)
     private Double price;

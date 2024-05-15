@@ -24,6 +24,13 @@ public class CategoryService {
     @Autowired
     private ModelMapper modelMapper;
 
+    private String generateCode(Category category) {
+        // Example code generation logic
+        String prefix = "CT";
+        String idPart = String.format("%02d", category.getId()); // Zero-padded ID
+        return prefix + idPart;
+    }
+
     public List<Category> getCategories() {
         List<Category> categories = categoryRepository.findAll();
         if (categories.isEmpty())
@@ -40,7 +47,9 @@ public class CategoryService {
 
     public ResponseEntity<?> addNewCategory(CategoryDTO categoryDTO) {
         Category category = categoryDTO.toEntity();
-        categoryRepository.save(category);
+        Category categorySaved = categoryRepository.save(category);
+        category.setCode(generateCode(categorySaved));
+        categoryRepository.save(categorySaved);
         return ResponseEntity.ok("Category created successfully");
     }
 

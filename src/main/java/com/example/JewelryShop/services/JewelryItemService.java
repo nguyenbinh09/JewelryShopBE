@@ -3,6 +3,7 @@ package com.example.JewelryShop.services;
 import com.example.JewelryShop.dtos.JewelryItemDTO;
 import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.Category;
+import com.example.JewelryShop.models.Image;
 import com.example.JewelryShop.models.JewelryItem;
 import com.example.JewelryShop.repositories.CategoryRepository;
 import com.example.JewelryShop.repositories.JewelryItemRepository;
@@ -14,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.modelmapper.ModelMapper;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +29,12 @@ public class JewelryItemService {
     private CategoryRepository categoryRepository;
     @Autowired
     private ModelMapper modelMapper;
+
+    private String generateSku(JewelryItem jewelryItem) {
+        String prefix = jewelryItem.getCategory().getCode();
+        String idPart = String.format("%04d", jewelryItem.getId()); // Zero-padded ID
+        return prefix + "-JEW" + idPart;
+    }
 
     public List<JewelryItem> getJewelryItems() {
         List<JewelryItem> jewelryItems = jewelryItemRepository.findAll();
@@ -48,10 +56,16 @@ public class JewelryItemService {
             throw new NotFoundException("Category with id " + jewelryItemDTO.getCategory_id() + " does not exist");
         }
         JewelryItem jewelryItem = jewelryItemDTO.toEntity();
+        for (String image : jewelryItemDTO.getImage()) {
+            Image img = new Image();
+            img.setUrl(image);
+            img.setJewelry_item(jewelryItem);
+            jewelryItem.getImages().add(img);
+        }
         jewelryItem.setCategory(category.get());
-        jewelryItem.setSku_code("456");
-        System.out.println(jewelryItem);
-        jewelryItemRepository.save(jewelryItem);
+        JewelryItem jewelryItemSaved = jewelryItemRepository.save(jewelryItem);
+        jewelryItem.setSku_code(generateSku(jewelryItemSaved));
+        jewelryItemRepository.save(jewelryItemSaved);
         return ResponseEntity.ok("Jewelry created successfully");
     }
 

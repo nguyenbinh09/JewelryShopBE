@@ -23,8 +23,8 @@ public class Review extends BaseModel {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "images")
-    private List<String> images = new ArrayList<>();
+    @OneToMany(mappedBy = "review", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 
     @Column(name = "rating")
     private Float rating;
