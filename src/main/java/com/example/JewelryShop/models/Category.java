@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
 @Table
 public class Category extends BaseModel {
     @Column(name = "code", unique = true, nullable = false)
-    private String code;
+    private String code = "";
 
     @Column(name = "name", nullable = false)
     private String name;

@@ -21,7 +21,8 @@ public class JewelryItemDTO {
     @NotNull(message = "Color is mandatory")
     private String metal_color;
     private String stone_color;
-    private String image;
+    @NotNull(message = "Image is mandatory")
+    private List<String> image;
     @NotNull(message = "Price is mandatory")
     private Double price;
     private Integer quantity;
@@ -34,7 +35,6 @@ public class JewelryItemDTO {
         jewelryItem.setColor(this.color);
         jewelryItem.setMetal_color(this.metal_color);
         jewelryItem.setStone_color(this.stone_color);
-        jewelryItem.setImage(this.image);
         jewelryItem.setPrice(this.price);
         jewelryItem.setQuantity(this.quantity);
         return jewelryItem;
@@ -53,8 +53,6 @@ public class JewelryItemDTO {
             jewelryItem.setMetal_color(this.metal_color);
         if (this.stone_color != null)
             jewelryItem.setStone_color(this.stone_color);
-        if (this.image != null)
-            jewelryItem.setImage(this.image);
         if (this.price != null)
             jewelryItem.setPrice(this.price);
         if (this.quantity != null)
