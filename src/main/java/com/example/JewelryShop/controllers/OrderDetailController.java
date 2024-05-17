@@ -1,5 +1,7 @@
 package com.example.JewelryShop.controllers;
 
+import com.example.JewelryShop.exceptions.InternalServerErrorException;
+import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.Order;
 import com.example.JewelryShop.models.OrderDetail;
 import com.example.JewelryShop.services.OrderDetailService;
@@ -17,6 +19,12 @@ public class OrderDetailController {
 
     @GetMapping("/order/{orderId}")
     public List<OrderDetail> getOrderDetailByOrderId(@PathVariable Long orderId) {
-        return orderDetailService.getOrderDetailByOrderId(orderId);
+        try {
+            return orderDetailService.getOrderDetailByOrderId(orderId);
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 }

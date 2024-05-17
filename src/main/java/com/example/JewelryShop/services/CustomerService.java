@@ -27,6 +27,10 @@ public class CustomerService {
         return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Customer with id " + id + " does not exist"));
     }
 
+    public Customer getCustomerByUserId(Long userId) {
+        return customerRepository.findByUserId(userId);
+    }
+
     public void addNewCustomer(Long userId) {
         Customer customer = new Customer();
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId + " does not exist"));

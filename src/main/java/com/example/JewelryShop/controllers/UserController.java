@@ -1,6 +1,8 @@
 package com.example.JewelryShop.controllers;
 
 import com.example.JewelryShop.dtos.UserDTO;
+import com.example.JewelryShop.exceptions.InternalServerErrorException;
+import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.User;
 import com.example.JewelryShop.services.UserService;
 import jakarta.validation.Valid;
@@ -26,15 +28,23 @@ public class UserController {
 
     @GetMapping("/{account_id}")
     public User getUserByUID(@PathVariable("account_id") String account_id) {
-        return userService.getUserByAccountId(account_id);
+        try {
+            return userService.getUserByAccountId(account_id);
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
     @PostMapping
     public ResponseEntity<?> addNewUser(@RequestBody @Valid UserDTO userDTO) {
         try {
             return userService.addNewUser(userDTO);
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new InternalServerErrorException(e.getMessage());
         }
     }
 
