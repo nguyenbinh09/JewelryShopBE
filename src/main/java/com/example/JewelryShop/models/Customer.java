@@ -1,6 +1,9 @@
 package com.example.JewelryShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -18,6 +21,8 @@ public class Customer extends BaseModel {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;

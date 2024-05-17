@@ -1,7 +1,6 @@
 package com.example.JewelryShop.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -24,6 +23,8 @@ public class JewelryItem extends BaseModel {
     @Column(name = "description")
     private String description = "";
 
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;

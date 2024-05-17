@@ -50,6 +50,8 @@ public class OrderController {
     public ResponseEntity<?> addNewOrder(@RequestBody @Valid OrderDTO orderDTO) {
         try {
             return orderService.addNewOrder(orderDTO);
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
         }
@@ -59,6 +61,8 @@ public class OrderController {
     public ResponseEntity<?> updateOrderStatus(@PathVariable("id") Long id, @RequestBody @Valid String status) {
         try {
             return orderService.updateOrderStatus(id, status);
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
         }
@@ -68,6 +72,8 @@ public class OrderController {
     public ResponseEntity<?> deleteOrder(@PathVariable("id") Long id) {
         try {
             return orderService.deleteOrder(id);
+        } catch (NotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
         }

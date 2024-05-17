@@ -1,5 +1,6 @@
 package com.example.JewelryShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,10 +13,12 @@ import java.util.List;
 @Data
 @Table
 public class Review extends BaseModel {
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jewelry_item_id")
     private JewelryItem jewelry_item;
