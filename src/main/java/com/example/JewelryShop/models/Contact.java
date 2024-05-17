@@ -1,5 +1,6 @@
 package com.example.JewelryShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
@@ -21,9 +22,11 @@ public class Contact extends BaseModel {
     @Column(name = "address")
     private String address;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "contact")
     private PersonalInformation information;
 
-//    @OneToOne(mappedBy = "contact")
-//    private Order order;
+    @JsonIgnore
+    @OneToOne(mappedBy = "contact")
+    private Order order;
 }

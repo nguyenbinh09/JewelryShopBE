@@ -54,4 +54,22 @@ public class OrderController {
             throw new InternalServerErrorException(e.getMessage());
         }
     }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable("id") Long id, @RequestBody @Valid String status) {
+        try {
+            return orderService.updateOrderStatus(id, status);
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable("id") Long id) {
+        try {
+            return orderService.deleteOrder(id);
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
 }

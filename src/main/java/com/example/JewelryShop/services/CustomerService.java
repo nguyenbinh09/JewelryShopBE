@@ -27,7 +27,7 @@ public class CustomerService {
         return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Customer with id " + id + " does not exist"));
     }
 
-    public Customer addNewCustomer(Long userId) {
+    public void addNewCustomer(Long userId) {
         Customer customer = new Customer();
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User with id " + userId + " does not exist"));
         customer.setUser(user);
@@ -38,6 +38,5 @@ public class CustomerService {
         customer.setWishlist(wishlistDetail);
         List<Order> orders = new ArrayList<>();
         customer.setOrder_history(orders);
-        return customerRepository.save(customer);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.JewelryShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,9 +26,11 @@ public class User extends BaseModel {
     @JoinColumn(name = "information_id", referencedColumnName = "id")
     private PersonalInformation information;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     private Employee employee;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "user")
     private Customer customer;
 

@@ -1,5 +1,6 @@
 package com.example.JewelryShop.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,9 +22,11 @@ public class Customer extends BaseModel {
     @JoinColumn(name = "cart_id", referencedColumnName = "id")
     private Cart cart;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<WishlistDetail> wishlist = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> order_history = new ArrayList<>();
 }
