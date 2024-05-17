@@ -31,6 +31,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUserByAccountId(String accountId) {
+        User user = userRepository.findUserByAccountId(accountId);
+        if (user == null) {
+            throw new InternalServerErrorException("User with account id " + accountId + " does not exist");
+        }
+        return user;
+    }
+
     @Transactional
     public ResponseEntity<?> addNewUser(@Valid UserDTO userDTO) {
         User user = userDTO.toEntity();

@@ -24,6 +24,11 @@ public class UserController {
         return userService.getUsers();
     }
 
+    @GetMapping("/{account_id}")
+    public User getUserByUID(@PathVariable("account_id") String account_id) {
+        return userService.getUserByAccountId(account_id);
+    }
+
     @PostMapping
     public ResponseEntity<?> addNewUser(@RequestBody @Valid UserDTO userDTO) {
         try {

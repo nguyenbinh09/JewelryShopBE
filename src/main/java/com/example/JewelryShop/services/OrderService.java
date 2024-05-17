@@ -31,8 +31,6 @@ public class OrderService {
     @Autowired
     private CustomerRepository customerRepository;
     @Autowired
-    private OrderDetailRepository orderDetailRepository;
-    @Autowired
     private ModelMapper modelMapper;
 
     public List<Order> getOrders() {
@@ -70,7 +68,29 @@ public class OrderService {
         Contact shippingContact = orderDTO.getShipping_contact().toEntity();
         order.setContact(shippingContact);
         orderRepository.save(order);
+        customer.getOrder_history().add(order);
+        customerRepository.save(customer);
         return ResponseEntity.ok("Order created successfully");
     }
-    
+
+    public ResponseEntity<?> updateOrderStatus(Long id, @Valid String status) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Could not find order with id " + id));
+        order.setStatus(status);
+        orderRepository.save(order);
+        return ResponseEntity.ok("Order status updated successfully");
+    }
+
+    @Transactional
+    public ResponseEntity<?> deleteOrder(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Could not find order with id " + id));
+        order.setIs_deleted(true);
+        for (OrderDetail orderDetail : order.getOrderDetail()) {
+            JewelryItem item = orderDetail.getJewelry_item();
+            item.setQuantity(item.getQuantity() + orderDetail.getQuantity());
+            orderDetail.setIs_deleted(true);
+            jewelryItemRepository.save(item);
+        }
+        orderRepository.save(order);
+        return ResponseEntity.ok("Order deleted successfully");
+    }
 }

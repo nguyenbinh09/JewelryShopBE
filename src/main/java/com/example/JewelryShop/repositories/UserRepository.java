@@ -10,5 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findUserById(Long id);
+    @Query("SELECT u FROM User u WHERE u.account_id = ?1")
+    User findUserByAccountId(String account_id);
 }

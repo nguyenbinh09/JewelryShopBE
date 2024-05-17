@@ -7,6 +7,7 @@ import com.example.JewelryShop.models.Image;
 import com.example.JewelryShop.models.JewelryItem;
 import com.example.JewelryShop.repositories.CategoryRepository;
 import com.example.JewelryShop.repositories.JewelryItemRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -69,14 +70,16 @@ public class JewelryItemService {
         return ResponseEntity.ok("Jewelry created successfully");
     }
 
+    @Transactional
     public ResponseEntity<?> updateJewelryItem(Long id, JewelryItemDTO jewelryItemDTO) {
         Optional<JewelryItem> oldJewelryItem = jewelryItemRepository.findById(id);
         if (oldJewelryItem.isEmpty()) {
             throw new NotFoundException("Jewelry with id " + id + " does not exist");
         }
         JewelryItem jewelryItem = jewelryItemDTO.toEntity(oldJewelryItem.get());
-        System.out.println(jewelryItem.getId());
         jewelryItemRepository.save(jewelryItem);
         return ResponseEntity.ok("Jewelry updated successfully");
     }
+
+
 }
