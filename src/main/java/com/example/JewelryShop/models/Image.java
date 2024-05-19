@@ -30,10 +30,10 @@ public class Image extends BaseModel {
     @OneToOne(mappedBy = "avatar")
     private User user;
 
-//    @JsonIgnore
-//    @ManyToOne
-//    @JoinColumn(name = "variant_id")
-//    private Variant variant;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "variant_id")
+    private Variant variant;
 
     public Image() {
     }

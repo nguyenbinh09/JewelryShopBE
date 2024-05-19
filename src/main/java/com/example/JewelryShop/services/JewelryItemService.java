@@ -1,10 +1,10 @@
 package com.example.JewelryShop.services;
 
 import com.example.JewelryShop.dtos.JewelryItemDTO;
+import com.example.JewelryShop.dtos.OptionDTO;
+import com.example.JewelryShop.dtos.OptionValueDTO;
 import com.example.JewelryShop.exceptions.NotFoundException;
-import com.example.JewelryShop.models.Category;
-import com.example.JewelryShop.models.Image;
-import com.example.JewelryShop.models.JewelryItem;
+import com.example.JewelryShop.models.*;
 import com.example.JewelryShop.repositories.CategoryRepository;
 import com.example.JewelryShop.repositories.JewelryItemRepository;
 import jakarta.transaction.Transactional;
@@ -16,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.modelmapper.ModelMapper;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,6 +27,8 @@ public class JewelryItemService {
     private JewelryItemRepository jewelryItemRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private OptionService optionService;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -51,19 +52,19 @@ public class JewelryItemService {
         return jewelryItem.get();
     }
 
+    @Transactional
     public ResponseEntity<?> addNewJewelryItem(@Valid JewelryItemDTO jewelryItemDTO) {
         Optional<Category> category = categoryRepository.findById(jewelryItemDTO.getCategory_id());
         if (category.isEmpty()) {
             throw new NotFoundException("Category with id " + jewelryItemDTO.getCategory_id() + " does not exist");
         }
         JewelryItem jewelryItem = jewelryItemDTO.toEntity();
-        for (String image : jewelryItemDTO.getImage()) {
-            Image img = new Image();
-            img.setUrl(image);
-            img.setJewelry_item(jewelryItem);
-            jewelryItem.getImages().add(img);
-        }
         jewelryItem.setCategory(category.get());
+        for (OptionDTO optionDTO : jewelryItemDTO.getOptions()) {
+            Option option = optionService.addOption(optionDTO);
+            option.setJewelry_item(jewelryItem);
+            jewelryItem.getOptions().add(option);
+        }
         JewelryItem jewelryItemSaved = jewelryItemRepository.save(jewelryItem);
         jewelryItem.setSku_code(generateSku(jewelryItemSaved));
         jewelryItemRepository.save(jewelryItemSaved);
@@ -81,5 +82,13 @@ public class JewelryItemService {
         return ResponseEntity.ok("Jewelry updated successfully");
     }
 
-
+    public ResponseEntity<?> deleteJewelryItem(Long id) {
+        Optional<JewelryItem> jewelryItem = jewelryItemRepository.findById(id);
+        if (jewelryItem.isEmpty()) {
+            throw new NotFoundException("Jewelry with id " + id + " does not exist");
+        }
+        jewelryItem.get().setIs_deleted(true);
+        jewelryItemRepository.save(jewelryItem.get());
+        return ResponseEntity.ok("Jewelry deleted successfully");
+    }
 }

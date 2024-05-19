@@ -15,28 +15,17 @@ public class JewelryItemDTO {
     private String description;
     @NotNull(message = "Category id is mandatory")
     private Long category_id;
-    @NotNull(message = "Material id is mandatory")
-    private String material;
-    private String color;
-    @NotNull(message = "Color is mandatory")
-    private String metal_color;
-    private String stone_color;
-    @NotNull(message = "Image is mandatory")
-    private List<String> image;
+    //    @NotNull(message = "Image is mandatory")
+//    private List<String> image;
     @NotNull(message = "Price is mandatory")
     private Double price;
-    private Integer quantity;
+    List<OptionDTO> options;
 
     public JewelryItem toEntity() {
         JewelryItem jewelryItem = new JewelryItem();
         jewelryItem.setName(this.name);
         jewelryItem.setDescription(this.description);
-        jewelryItem.setMaterial(this.material);
-        jewelryItem.setColor(this.color);
-        jewelryItem.setMetal_color(this.metal_color);
-        jewelryItem.setStone_color(this.stone_color);
         jewelryItem.setPrice(this.price);
-        jewelryItem.setQuantity(this.quantity);
         return jewelryItem;
     }
 
@@ -45,18 +34,8 @@ public class JewelryItemDTO {
             jewelryItem.setName(this.name);
         if (this.description != null)
             jewelryItem.setDescription(this.description);
-        if (this.material != null)
-            jewelryItem.setMaterial(this.material);
-        if (this.color != null)
-            jewelryItem.setColor(this.color);
-        if (this.metal_color != null)
-            jewelryItem.setMetal_color(this.metal_color);
-        if (this.stone_color != null)
-            jewelryItem.setStone_color(this.stone_color);
         if (this.price != null)
             jewelryItem.setPrice(this.price);
-        if (this.quantity != null)
-            jewelryItem.setQuantity(this.quantity);
         return jewelryItem;
     }
 }

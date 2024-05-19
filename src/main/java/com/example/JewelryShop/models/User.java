@@ -18,6 +18,9 @@ public class User extends BaseModel {
     @Column(name = "account_id", unique = true, nullable = false)
     private String account_id;
 
+    @Column(name = "username", nullable = false)
+    private String username;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "avatar_id", referencedColumnName = "id")
     private Image avatar = new Image("https://i.pinimg.com/originals/c6/e5/65/c6e56503cfdd87da299f72dc416023d4.jpg");
