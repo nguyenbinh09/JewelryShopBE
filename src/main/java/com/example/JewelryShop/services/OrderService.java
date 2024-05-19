@@ -5,10 +5,7 @@ import com.example.JewelryShop.dtos.OrderDetailDTO;
 import com.example.JewelryShop.exceptions.BadRequestException;
 import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.*;
-import com.example.JewelryShop.repositories.CustomerRepository;
-import com.example.JewelryShop.repositories.JewelryItemRepository;
-import com.example.JewelryShop.repositories.OrderDetailRepository;
-import com.example.JewelryShop.repositories.OrderRepository;
+import com.example.JewelryShop.repositories.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -30,6 +27,8 @@ public class OrderService {
     private JewelryItemRepository jewelryItemRepository;
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private VariantRepository variantRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -61,6 +60,14 @@ public class OrderService {
                 orderDetail.setOrder(order);
                 listOrderDetail.add(orderDetail);
             }
+            List<Variant> selectedVariants = variantRepository.findAllById(orderDetailDTO.getVariant_ids());
+            double unitPrice = item.get().getPrice();
+            for (Variant variant : selectedVariants) {
+
+                unitPrice += variant.getPrice();
+            }
+            orderDetail.setTotal_price(unitPrice);
+            orderDetail.setQuantity(orderDetailDTO.getQuantity());
         }
         order.setOrderDetail(listOrderDetail);
         Customer customer = customerRepository.findById(orderDTO.getPurchaser()).orElseThrow(() -> new NotFoundException("Could not find customer with id " + orderDTO.getPurchaser()));

@@ -29,27 +29,24 @@ public class JewelryItem extends BaseModel {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "coupon_id")
     private Coupon coupon;
-
-    @Column(name = "material", nullable = false)
-    private String material;
-
-    @Column(name = "color", nullable = false)
-    private String color;
-
-    @Column(name = "metal_color")
-    private String metal_color;
-
-    @Column(name = "stone_color")
-    private String stone_color;
 
     @OneToMany(mappedBy = "jewelry_item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "jewelry_item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "jewelry_item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Variant> variants = new ArrayList<>();
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "jewelry_item", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Option> options = new ArrayList<>();
 
     @Column(name = "price", nullable = false)
     private Double price;
