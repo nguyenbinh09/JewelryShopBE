@@ -8,8 +8,7 @@ import java.util.List;
 
 @Data
 public class OrderDetailDTO {
-    private Long jewelry_item_id;
-    private List<Long> variant_ids;
+    private Long variant_id;
     private Double total_price;
     private Integer quantity;
 

@@ -14,8 +14,8 @@ import java.util.List;
 @Table
 public class OrderDetail extends BaseModel {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "jewelry_item_id")
-    private JewelryItem jewelry_item;
+    @JoinColumn(name = "variant_id")
+    private Variant variant;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "order_id")

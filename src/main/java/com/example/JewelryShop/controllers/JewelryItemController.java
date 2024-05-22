@@ -1,17 +1,22 @@
 package com.example.JewelryShop.controllers;
 
 import com.example.JewelryShop.dtos.JewelryItemDTO;
+import com.example.JewelryShop.dtos.OptionDTO;
 import com.example.JewelryShop.exceptions.BadRequestException;
 import com.example.JewelryShop.exceptions.InternalServerErrorException;
 import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.JewelryItem;
 import com.example.JewelryShop.services.JewelryItemService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -25,6 +30,8 @@ public class JewelryItemController {
     private JewelryItemService jewelryItemService;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping
     public List<JewelryItem> getJewelryItems() {
@@ -48,10 +55,13 @@ public class JewelryItemController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<?> addNewJewelryItem(@RequestBody @Valid JewelryItemDTO JewelryItemDTO) {
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addNewJewelryItem(@RequestPart("jewelryItem") String jewelryItemJson,
+                                               @RequestPart("images") List<MultipartFile> images
+    ) throws JsonProcessingException {
+        JewelryItemDTO jewelryItemDTO = objectMapper.readValue(jewelryItemJson, JewelryItemDTO.class);
         try {
-            return jewelryItemService.addNewJewelryItem(JewelryItemDTO);
+            return jewelryItemService.addNewJewelryItem(jewelryItemDTO, images);
         } catch (BadRequestException | NotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -64,6 +74,17 @@ public class JewelryItemController {
         try {
             return jewelryItemService.updateJewelryItem(id, JewelryItemDTO);
         } catch (BadRequestException | NotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteJewelryItem(@PathVariable("id") Long id) {
+        try {
+            return jewelryItemService.deleteJewelryItem(id);
+        } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());

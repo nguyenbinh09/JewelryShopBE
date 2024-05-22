@@ -21,7 +21,7 @@ public class CartDetail extends BaseModel {
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "jewelry_item_id")
-    private JewelryItem jewelry_item;
+    @ManyToOne
+    @JoinColumn(name = "variant_id")
+    private Variant variant;
 }

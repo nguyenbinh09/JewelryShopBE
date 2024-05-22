@@ -5,6 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class JewelryItemDTO {
     @NotNull(message = "Category id is mandatory")
     private Long category_id;
     //    @NotNull(message = "Image is mandatory")
-//    private List<String> image;
+//    List<MultipartFile> images;
     @NotNull(message = "Price is mandatory")
     private Double price;
     List<OptionDTO> options;

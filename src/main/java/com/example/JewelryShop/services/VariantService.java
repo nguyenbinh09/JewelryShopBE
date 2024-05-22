@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -27,6 +29,8 @@ public class VariantService {
     JewelryItemRepository jewelryItemRepository;
     @Autowired
     VariantOptionValueRepository variantOptionValueRepository;
+    @Autowired
+    CloudinaryService cloudinaryService;
 
     @Transactional
     public ResponseEntity<?> createVariantsForItem(Long jewelryItemId) {
@@ -71,27 +75,41 @@ public class VariantService {
     public ResponseEntity<?> updateVariant(Long variantId, VariantUpdateDTO variantUpdateDTO) {
         Variant variant = variantRepository.findById(variantId).orElseThrow(() -> new NotFoundException("Variant with id " + variantId + " does not exist"));
         variantUpdateDTO.toEntity(variant);
-        if (variantUpdateDTO.getImages() != null) {
-            List<Long> updatedImages = variantUpdateDTO.getImages().stream()
-                    .map(ImageDTO::getId).filter(id -> id != null)
-                    .collect(Collectors.toList());
-            variant.getImages().removeIf(image -> image.getId() != null && !updatedImages.contains(image.getId()));
-            System.out.println(variantUpdateDTO.getImages());
-            for (ImageDTO image : variantUpdateDTO.getImages()) {
-                Optional<Image> existingImage = variant.getImages().stream()
-                        .filter(img -> image.getId() != null && img.getId().equals(image.getId()))
-                        .findFirst();
-                if (existingImage.isPresent()) {
-                    existingImage.get().setUrl(image.getUrl());
-                } else {
-                    Image img = new Image();
-                    img.setUrl(image.getUrl());
-                    img.setVariant(variant);
-                    variant.getImages().add(img);
-                }
-            }
-        }
         variantRepository.save(variant);
         return ResponseEntity.ok("Variant updated successfully");
+    }
+
+    @Transactional
+    public ResponseEntity<?> uploadVariantImage(Long variantId, List<MultipartFile> images) throws IOException {
+        Variant variant = variantRepository.findById(variantId).orElseThrow(() -> new NotFoundException("Variant with id " + variantId + " does not exist"));
+        for (MultipartFile image : images) {
+            Image imageEntity = new Image();
+            String imageUrl = cloudinaryService.upload(image);
+            imageEntity.setUrl(imageUrl);
+            imageEntity.setVariant(variant);
+            variant.getImages().add(imageEntity);
+        }
+        variantRepository.save(variant);
+        return ResponseEntity.ok("Variant image updated successfully");
+    }
+
+    public ResponseEntity<?> deleteVariant(Long variantId) {
+        Variant variant = variantRepository.findById(variantId).orElseThrow(() -> new NotFoundException("Variant with id " + variantId + " does not exist"));
+        variant.setIs_deleted(true);
+        variantRepository.save(variant);
+        return ResponseEntity.ok("Variant deleted successfully");
+    }
+
+    public ResponseEntity<?> deleteVariantImage(Long variantId, List<Long> images) {
+        Variant variant = variantRepository.findById(variantId).orElseThrow(() -> new NotFoundException("Variant with id " + variantId + " does not exist"));
+        List<Image> variantImages = variant.getImages();
+        for (Long id : images) {
+            Optional<Image> image = variantImages.stream().filter(img -> img.getId().equals(id)).findFirst();
+            if (image.isPresent()) {
+                image.get().setIs_deleted(true);
+                variantImages.remove(image.get());
+            }
+        }
+        return ResponseEntity.ok("Images deleted successfully");
     }
 }

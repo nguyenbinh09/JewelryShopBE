@@ -9,7 +9,6 @@ import java.util.List;
 public class VariantUpdateDTO {
     private Double price;
     private Integer quantity;
-    private List<ImageDTO> images;
 
     public Variant toEntity(Variant variant) {
         if (this.price != null)

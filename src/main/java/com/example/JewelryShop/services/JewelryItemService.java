@@ -2,7 +2,6 @@ package com.example.JewelryShop.services;
 
 import com.example.JewelryShop.dtos.JewelryItemDTO;
 import com.example.JewelryShop.dtos.OptionDTO;
-import com.example.JewelryShop.dtos.OptionValueDTO;
 import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.*;
 import com.example.JewelryShop.repositories.CategoryRepository;
@@ -14,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.modelmapper.ModelMapper;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,8 @@ public class JewelryItemService {
     private CategoryRepository categoryRepository;
     @Autowired
     private OptionService optionService;
+    @Autowired
+    private CloudinaryService cloudinaryService;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -53,7 +56,7 @@ public class JewelryItemService {
     }
 
     @Transactional
-    public ResponseEntity<?> addNewJewelryItem(@Valid JewelryItemDTO jewelryItemDTO) {
+    public ResponseEntity<?> addNewJewelryItem(@Valid JewelryItemDTO jewelryItemDTO, List<MultipartFile> images) throws IOException {
         Optional<Category> category = categoryRepository.findById(jewelryItemDTO.getCategory_id());
         if (category.isEmpty()) {
             throw new NotFoundException("Category with id " + jewelryItemDTO.getCategory_id() + " does not exist");
@@ -64,6 +67,13 @@ public class JewelryItemService {
             Option option = optionService.addOption(optionDTO);
             option.setJewelry_item(jewelryItem);
             jewelryItem.getOptions().add(option);
+        }
+        for (MultipartFile image : images) {
+            Image imageEntity = new Image();
+            imageEntity.setJewelry_item(jewelryItem);
+            String imageUrl = cloudinaryService.upload(image);
+            imageEntity.setUrl(imageUrl);
+            jewelryItem.getImages().add(imageEntity);
         }
         JewelryItem jewelryItemSaved = jewelryItemRepository.save(jewelryItem);
         jewelryItem.setSku_code(generateSku(jewelryItemSaved));
@@ -90,5 +100,12 @@ public class JewelryItemService {
         jewelryItem.get().setIs_deleted(true);
         jewelryItemRepository.save(jewelryItem.get());
         return ResponseEntity.ok("Jewelry deleted successfully");
+    }
+
+    public void updateJewelryRating(JewelryItem jewelryItem) {
+        List<Review> reviews = jewelryItem.getReviews();
+        double rating = reviews.stream().mapToDouble(Review::getRating).average().orElse(0.0);
+        jewelryItem.setRating(rating);
+        jewelryItemRepository.save(jewelryItem);
     }
 }
