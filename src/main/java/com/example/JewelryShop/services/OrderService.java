@@ -24,8 +24,6 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
-    private JewelryItemRepository jewelryItemRepository;
-    @Autowired
     private CustomerRepository customerRepository;
     @Autowired
     private VariantRepository variantRepository;
@@ -46,27 +44,20 @@ public class OrderService {
         List<OrderDetail> listOrderDetail = new ArrayList<>();
         for (OrderDetailDTO orderDetailDTO : orderDTO.getOrdered_items()) {
             OrderDetail orderDetail = orderDetailDTO.toEntity();
-            Optional<JewelryItem> item = jewelryItemRepository.findById(orderDetailDTO.getJewelry_item_id());
-            if (item.isEmpty()) {
-                throw new NotFoundException("Could not find item with id " + orderDetailDTO.getJewelry_item_id());
+            Optional<Variant> variantItem = variantRepository.findById(orderDetailDTO.getVariant_id());
+            if (variantItem.isEmpty()) {
+                throw new NotFoundException("Could not find item with variant id " + orderDetailDTO.getVariant_id());
             }
-            int quantity = item.get().getQuantity() - orderDetailDTO.getQuantity();
+            int quantity = variantItem.get().getQuantity() - orderDetailDTO.getQuantity();
             if (quantity < 0) {
-                throw new BadRequestException("Not enough quantity for item with SKU CODE " + item.get().getSku_code());
+                throw new BadRequestException("Not enough quantity for item with variant id " + variantItem.get().getId());
             } else {
-                item.get().setQuantity(quantity);
-                jewelryItemRepository.save(item.get());
-                orderDetail.setJewelry_item(item.get());
+                variantItem.get().setQuantity(quantity);
+                variantRepository.save(variantItem.get());
+                orderDetail.setVariant(variantItem.get());
                 orderDetail.setOrder(order);
                 listOrderDetail.add(orderDetail);
             }
-            List<Variant> selectedVariants = variantRepository.findAllById(orderDetailDTO.getVariant_ids());
-            double unitPrice = item.get().getPrice();
-            for (Variant variant : selectedVariants) {
-
-                unitPrice += variant.getPrice();
-            }
-            orderDetail.setTotal_price(unitPrice);
             orderDetail.setQuantity(orderDetailDTO.getQuantity());
         }
         order.setOrderDetail(listOrderDetail);
@@ -92,10 +83,10 @@ public class OrderService {
         Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Could not find order with id " + id));
         order.setIs_deleted(true);
         for (OrderDetail orderDetail : order.getOrderDetail()) {
-            JewelryItem item = orderDetail.getJewelry_item();
-            item.setQuantity(item.getQuantity() + orderDetail.getQuantity());
+            Variant variantItem = orderDetail.getVariant();
+            variantItem.setQuantity(variantItem.getQuantity() + orderDetail.getQuantity());
             orderDetail.setIs_deleted(true);
-            jewelryItemRepository.save(item);
+            variantRepository.save(variantItem);
         }
         orderRepository.save(order);
         return ResponseEntity.ok("Order deleted successfully");

@@ -23,6 +23,9 @@ public class JewelryItem extends BaseModel {
     @Column(name = "description")
     private String description = "";
 
+    @Column(name = "rating")
+    private Double rating = 0.0;
+
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
@@ -49,7 +52,7 @@ public class JewelryItem extends BaseModel {
     private List<Option> options = new ArrayList<>();
 
     @Column(name = "price", nullable = false)
-    private Double price;
+    private Double price = 0.0;
 
     @Column(name = "quantity")
     private Integer quantity = 0;

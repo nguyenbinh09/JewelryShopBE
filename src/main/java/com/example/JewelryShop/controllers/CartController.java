@@ -40,5 +40,14 @@ public class CartController {
         }
     }
 
-
+    @DeleteMapping("/{cartId}/removeCartDetail/{cartDetailId}")
+    public ResponseEntity<?> removeCartDetailFromCart(@PathVariable Long cartId, @PathVariable Long cartDetailId) {
+        try {
+            return cartService.removeCartDetailFromCart(cartId, cartDetailId);
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
 }

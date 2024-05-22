@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 public class CartDetailDTO {
-    private Long jewelry_item_id;
+    private Long variant_id;
     private Double total_price;
     private Integer quantity;
 

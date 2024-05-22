@@ -1,8 +1,6 @@
 package com.example.JewelryShop.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,7 +18,9 @@ public class Order extends BaseModel {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetail = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
