@@ -35,9 +35,9 @@ public class Order extends BaseModel {
 
     @Column(name = "amount")
     private Double amount = 0.0;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "payment_method_id", referencedColumnName = "id")
+    
+    @ManyToOne
+    @JoinColumn(name = "payment_method_id")
     private PaymentMethod paymentMethod;
 
     @OneToOne(cascade = CascadeType.ALL)

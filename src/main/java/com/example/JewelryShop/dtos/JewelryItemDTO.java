@@ -16,8 +16,6 @@ public class JewelryItemDTO {
     private String description;
     @NotNull(message = "Category id is mandatory")
     private Long category_id;
-    //    @NotNull(message = "Image is mandatory")
-//    List<MultipartFile> images;
     @NotNull(message = "Price is mandatory")
     private Double price;
     List<OptionDTO> options;

@@ -21,4 +21,14 @@ public class PersonalInformationDTO {
         personalInformation.setContact(this.contact_id.toEntity());
         return personalInformation;
     }
+
+    public PersonalInformation toEntity(PersonalInformation personalInformation) {
+        if (this.name != null)
+            personalInformation.setName(this.name);
+        if (this.birthday != null)
+            personalInformation.setBirthday(this.birthday);
+        if (this.gender != null)
+            personalInformation.setGender(this.gender);
+        return personalInformation;
+    }
 }

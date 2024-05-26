@@ -17,4 +17,7 @@ public class Role extends BaseModel {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "code")
+    private String code;
 }
