@@ -7,6 +7,7 @@ import com.example.JewelryShop.models.Review;
 import com.example.JewelryShop.services.ReviewService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +24,8 @@ public class ReviewController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @PostMapping(value = "/{jewelry_id}/comment", consumes = "application/form-data")
-    public ResponseEntity<?> addNewReview(@RequestPart("reviewJson") String reviewJson, @RequestPart("images") List<MultipartFile> images) {
+    @PostMapping(value = "/{jewelry_id}/comment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addNewReview(@RequestPart("reviewJson") String reviewJson, @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         try {
             ReviewDTO reviewDTO = objectMapper.readValue(reviewJson, ReviewDTO.class);
             return reviewService.addNewReview(reviewDTO, images);

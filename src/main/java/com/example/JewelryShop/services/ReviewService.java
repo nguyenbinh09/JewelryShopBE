@@ -10,6 +10,7 @@ import com.example.JewelryShop.models.Review;
 import com.example.JewelryShop.repositories.CustomerRepository;
 import com.example.JewelryShop.repositories.JewelryItemRepository;
 import com.example.JewelryShop.repositories.ReviewRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -30,18 +31,22 @@ public class ReviewService {
     @Autowired
     private JewelryItemService jewelryItemService;
 
-    public ResponseEntity<?> addNewReview(ReviewDTO reviewDTO, List<MultipartFile> file) {
+    @Transactional
+    public ResponseEntity<?> addNewReview(ReviewDTO reviewDTO, List<MultipartFile> images) {
         Customer customer = customerRepository.findById(reviewDTO.getCustomer_id()).orElseThrow(() -> new NotFoundException("Customer with id " + reviewDTO.getCustomer_id() + " not found"));
         JewelryItem jewelryItem = jewelryItemRepository.findById(reviewDTO.getJewelry_item_id()).orElseThrow(() -> new NotFoundException("JewelryItem with id " + reviewDTO.getJewelry_item_id() + " not found"));
         Review review = reviewDTO.toEntity();
         review.setCustomer(customer);
         review.setJewelry_item(jewelryItem);
-        for (MultipartFile image : file) {
-            Image newImage = new Image();
-            newImage.setUrl(cloudinaryService.upload(image));
-            newImage.setReview(review);
-            review.getImages().add(newImage);
+        if (images != null) {
+            for (MultipartFile image : images) {
+                Image newImage = new Image();
+                newImage.setUrl(cloudinaryService.upload(image));
+                newImage.setReview(review);
+                review.getImages().add(newImage);
+            }
         }
+        jewelryItem.getReviews().add(review);
         reviewRepository.save(review);
         jewelryItemService.updateJewelryRating(jewelryItem);
         return ResponseEntity.ok().body("Review added successfully");

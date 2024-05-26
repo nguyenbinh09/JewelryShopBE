@@ -1,7 +1,9 @@
 package com.example.JewelryShop.services;
 
 import com.example.JewelryShop.dtos.UserDTO;
+import com.example.JewelryShop.exceptions.BadRequestException;
 import com.example.JewelryShop.exceptions.InternalServerErrorException;
+import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.User;
 import com.example.JewelryShop.repositories.CustomerRepository;
 import com.example.JewelryShop.repositories.UserRepository;
@@ -34,7 +36,7 @@ public class UserService {
     public User getUserByAccountId(String accountId) {
         User user = userRepository.findUserByAccountId(accountId);
         if (user == null) {
-            throw new InternalServerErrorException("User with account id " + accountId + " does not exist");
+            throw new BadRequestException("User with account id " + accountId + " does not exist");
         }
         return user;
     }
@@ -47,12 +49,19 @@ public class UserService {
         return ResponseEntity.ok("User created successfully");
     }
 
-    public void deleteUser(Long userId) {
-        userRepository.findById(userId);
-        boolean exists = userRepository.existsById(userId);
-        if (!exists) {
-            throw new IllegalStateException("User with id " + userId + " does not exist");
-        }
-        userRepository.deleteById(userId);
+    public ResponseEntity<?> deleteUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new BadRequestException("User with id " + userId + " does not exist"));
+        user.setIs_deleted(true);
+        user.getInformation().setIs_deleted(true);
+        user.getInformation().getContact().setIs_deleted(true);
+        userRepository.save(user);
+        return ResponseEntity.ok("User deleted successfully");
+    }
+
+    public ResponseEntity<?> addEmployee(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new BadRequestException("User with id " + userId + " does not exist"));
+        user.setIs_employee(true);
+        userRepository.save(user);
+        return ResponseEntity.ok("Employee added successfully");
     }
 }

@@ -28,6 +28,8 @@ public class OrderService {
     @Autowired
     private VariantRepository variantRepository;
     @Autowired
+    private PaymentMethodRepository paymentMethodRepository;
+    @Autowired
     private ModelMapper modelMapper;
 
     public List<Order> getOrders() {
@@ -65,6 +67,8 @@ public class OrderService {
         order.setCustomer(customer);
         Contact shippingContact = orderDTO.getShipping_contact().toEntity();
         order.setContact(shippingContact);
+        PaymentMethod paymentMethod = paymentMethodRepository.findById(orderDTO.getPayment_method()).orElseThrow(() -> new NotFoundException("Could not find payment method with id " + orderDTO.getPayment_method()));
+        order.setPaymentMethod(paymentMethod);
         orderRepository.save(order);
         customer.getOrder_history().add(order);
         customerRepository.save(customer);

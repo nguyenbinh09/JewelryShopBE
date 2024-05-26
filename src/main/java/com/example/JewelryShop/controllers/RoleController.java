@@ -1,10 +1,10 @@
 package com.example.JewelryShop.controllers;
 
-import com.example.JewelryShop.dtos.UserDTO;
+import com.example.JewelryShop.dtos.RoleDTO;
 import com.example.JewelryShop.exceptions.InternalServerErrorException;
 import com.example.JewelryShop.exceptions.NotFoundException;
-import com.example.JewelryShop.models.User;
-import com.example.JewelryShop.services.UserService;
+import com.example.JewelryShop.models.Role;
+import com.example.JewelryShop.services.RoleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,23 +13,29 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
 @CrossOrigin
-@RequestMapping(path = "api/v1/user")
+@RestController
+@RequestMapping(path = "api/v1/role")
 @Validated
-public class UserController {
+public class RoleController {
     @Autowired
-    private UserService userService;
+    private RoleService roleService;
 
     @GetMapping
-    public List<User> getUsers() {
-        return userService.getUsers();
+    public List<Role> getRoles() {
+        try {
+            return roleService.getRoles();
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
     }
 
-    @GetMapping("/{account_id}")
-    public User getUserByUID(@PathVariable("account_id") String account_id) {
+    @GetMapping("/{roleId}")
+    public Role getRoleById(Long roleId) {
         try {
-            return userService.getUserByAccountId(account_id);
+            return roleService.getRoleById(roleId);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -38,9 +44,9 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addNewUser(@RequestBody @Valid UserDTO userDTO) {
+    public ResponseEntity<?> addNewRole(@RequestBody @Valid RoleDTO roleDTO) {
         try {
-            return userService.addNewUser(userDTO);
+            return roleService.addNewRole(roleDTO);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -48,10 +54,10 @@ public class UserController {
         }
     }
 
-    @DeleteMapping(path = "{userId}")
-    public ResponseEntity<?> deleteUser(@PathVariable("userId") Long userId) {
+    @PutMapping("/{roleId}")
+    public ResponseEntity<?> updateRole(@PathVariable Long roleId, @RequestBody RoleDTO roleDTO) {
         try {
-            return userService.deleteUser(userId);
+            return roleService.updateRole(roleId, roleDTO);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
@@ -59,10 +65,10 @@ public class UserController {
         }
     }
 
-    @PutMapping(path = "{userId}/add_employee")
-    public ResponseEntity<?> addEmployee(@PathVariable("userId") Long userId) {
+    @DeleteMapping("/{roleId}")
+    public ResponseEntity<?> deleteRole(@PathVariable Long roleId) {
         try {
-            return userService.addEmployee(userId);
+            return roleService.deleteRole(roleId);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {

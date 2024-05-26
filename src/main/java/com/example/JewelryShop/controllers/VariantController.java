@@ -5,6 +5,8 @@ import com.example.JewelryShop.exceptions.BadRequestException;
 import com.example.JewelryShop.exceptions.InternalServerErrorException;
 import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.Variant;
+import com.example.JewelryShop.models.VariantOptionValue;
+import com.example.JewelryShop.services.VariantOptionValueService;
 import com.example.JewelryShop.services.VariantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,6 +24,8 @@ import java.util.List;
 public class VariantController {
     @Autowired
     private VariantService variantService;
+    @Autowired
+    private VariantOptionValueService variantOptionValueService;
 
     @PostMapping("/create_variants_for_item/{jewelryItemId}")
     public ResponseEntity<?> createVariantsForItem(@PathVariable Long jewelryItemId) {
@@ -89,4 +93,14 @@ public class VariantController {
         }
     }
 
+    @GetMapping("/get_option_value_by_id/{variantId}")
+    public List<VariantOptionValue> getOptionValueByVariantId(@PathVariable Long variantId) {
+        try {
+            return variantOptionValueService.getVariantOptionValueVariantId(variantId);
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
 }
