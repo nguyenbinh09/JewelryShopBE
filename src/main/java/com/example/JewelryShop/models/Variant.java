@@ -1,6 +1,7 @@
 package com.example.JewelryShop.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.models.auth.In;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +30,7 @@ public class Variant extends BaseModel {
     private List<VariantOptionValue> variantOptionValues = new ArrayList<>();
 
     @Column(name = "price", nullable = false)
-    private Double price = 0.0;
+    private Integer price = 0;
 
     @Column(name = "quantity")
     private Integer quantity = 0;

@@ -43,7 +43,8 @@ public class JewelryItem extends BaseModel {
     @OneToMany(mappedBy = "jewelry_item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
-    @JsonIgnore
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "jewelry_item", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Variant> variants = new ArrayList<>();
 
@@ -52,7 +53,7 @@ public class JewelryItem extends BaseModel {
     private List<Option> options = new ArrayList<>();
 
     @Column(name = "price", nullable = false)
-    private Double price = 0.0;
+    private Integer price = 0;
 
     @Column(name = "quantity")
     private Integer quantity = 0;

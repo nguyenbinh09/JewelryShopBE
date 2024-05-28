@@ -5,6 +5,7 @@ import com.example.JewelryShop.exceptions.BadRequestException;
 import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.Category;
 import com.example.JewelryShop.repositories.CategoryRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class CategoryService {
             throw new NotFoundException("Could not find category with id " + id);
         return category.get();
     }
-
+    
     public ResponseEntity<?> addNewCategory(CategoryDTO categoryDTO) {
         Category category = categoryDTO.toEntity();
         Category categorySaved = categoryRepository.save(category);

@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -100,16 +101,27 @@ public class VariantService {
         return ResponseEntity.ok("Variant deleted successfully");
     }
 
+    @Transactional
     public ResponseEntity<?> deleteVariantImage(Long variantId, List<Long> images) {
-        Variant variant = variantRepository.findById(variantId).orElseThrow(() -> new NotFoundException("Variant with id " + variantId + " does not exist"));
-        List<Image> variantImages = variant.getImages();
+        Variant variant = variantRepository.findById(variantId)
+                .orElseThrow(() -> new NotFoundException("Variant with id " + variantId + " does not exist"));
+
+        List<Image> variantImages = new ArrayList<>(variant.getImages()); // Create a mutable list
+
         for (Long id : images) {
-            Optional<Image> image = variantImages.stream().filter(img -> img.getId().equals(id)).findFirst();
-            if (image.isPresent()) {
-                image.get().setIs_deleted(true);
-                variantImages.remove(image.get());
-            }
+            Optional<Image> image = variantImages.stream()
+                    .filter(img -> img.getId().equals(id))
+                    .findFirst();
+            image.ifPresent(value -> {
+                value.setIs_deleted(true);
+                variantImages.remove(value);
+            });
         }
+
+        variant.setImages(variantImages); // Update the variant's images list with the modified one
+        variantRepository.save(variant);
+
         return ResponseEntity.ok("Images deleted successfully");
     }
+
 }
