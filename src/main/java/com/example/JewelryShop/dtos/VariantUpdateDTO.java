@@ -9,4 +9,12 @@ import java.util.List;
 public class VariantUpdateDTO {
     private Integer price;
     private Integer quantity;
+
+    public Variant toEntity(Variant variant) {
+        if (this.price != null)
+            variant.setPrice(this.price);
+        if (this.quantity != null)
+            variant.setQuantity(this.quantity);
+        return variant;
+    }
 }
