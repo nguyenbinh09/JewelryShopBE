@@ -3,6 +3,7 @@ package com.example.JewelryShop.services;
 import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.*;
 import com.example.JewelryShop.repositories.CustomerRepository;
+import com.example.JewelryShop.repositories.JewelryItemRepository;
 import com.example.JewelryShop.repositories.UserRepository;
 import com.example.JewelryShop.repositories.VariantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ public class CustomerService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private VariantRepository variantRepository;
+    private JewelryItemRepository jewelryItemRepository;
 
     public List<Customer> getCustomers() {
         return customerRepository.findAll();
@@ -48,11 +49,11 @@ public class CustomerService {
         customer.setOrder_history(orders);
     }
 
-    public ResponseEntity<?> addWishlistDetailToWishlist(Long customerId, Long variantId) {
+    public ResponseEntity<?> addWishlistDetailToWishlist(Long customerId, Long jewelryId) {
         Customer customer = customerRepository.findById(customerId).orElseThrow(() -> new NotFoundException("Customer with id " + customerId + " does not exist"));
-        Variant variant = variantRepository.findById(variantId).orElseThrow(() -> new NotFoundException("Variant with id " + variantId + " does not exist"));
+        JewelryItem jewelryItem = jewelryItemRepository.findById(jewelryId).orElseThrow(() -> new NotFoundException("Jewelry item with id " + jewelryId + " does not exist"));
         WishlistDetail wishlistDetail = new WishlistDetail();
-        wishlistDetail.setVariant(variant);
+        wishlistDetail.setJewelryItem(jewelryItem);
         wishlistDetail.setCustomer(customer);
         customer.getWishlist().add(wishlistDetail);
         customerRepository.save(customer);

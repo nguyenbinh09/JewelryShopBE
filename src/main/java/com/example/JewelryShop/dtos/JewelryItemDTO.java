@@ -17,7 +17,7 @@ public class JewelryItemDTO {
     @NotNull(message = "Category id is mandatory")
     private Long category_id;
     @NotNull(message = "Price is mandatory")
-    private Double price;
+    private Integer price;
     List<OptionDTO> options;
 
     public JewelryItem toEntity() {

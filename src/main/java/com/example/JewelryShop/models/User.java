@@ -32,11 +32,13 @@ public class User extends BaseModel {
     @JoinColumn(name = "information_id", referencedColumnName = "id")
     private PersonalInformation information;
 
-    @JsonIgnore
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToOne(mappedBy = "user")
     private Employee employee;
 
-    @JsonIgnore
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
     @OneToOne(mappedBy = "user")
     private Customer customer;
 

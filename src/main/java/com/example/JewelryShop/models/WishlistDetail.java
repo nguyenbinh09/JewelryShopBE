@@ -13,8 +13,8 @@ import java.util.List;
 @Table
 public class WishlistDetail extends BaseModel {
     @ManyToOne
-    @JoinColumn(name = "variant_id")
-    private Variant variant;
+    @JoinColumn(name = "jewelry_item_id")
+    private JewelryItem jewelryItem;
 
     @JsonIgnore
     @ManyToOne
