@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class OrderDetailDTO {
     private Long variant_id;
-    private Double total_price;
+    private Integer total_price;
     private Integer quantity;
 
     public OrderDetail toEntity() {

@@ -15,9 +15,9 @@ public class OrderDTO {
     @NotNull(message = "Purchaser is mandatory")
     private Long purchaser;
     @NotNull(message = "Total price is mandatory")
-    private Double total_price;
+    private Integer total_price;
     @NotNull(message = "Amount is mandatory")
-    private Double amount;
+    private Integer amount;
     @NotNull(message = "Shipping contact is mandatory")
     private ContactDTO shipping_contact;
     @NotNull(message = "Payment method is mandatory")

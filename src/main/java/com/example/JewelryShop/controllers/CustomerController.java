@@ -51,10 +51,10 @@ public class CustomerController {
         }
     }
 
-    @PutMapping("/{id}/add_item_to_wishlist/{variant_id}")
-    public ResponseEntity<?> addWishlistDetailToWishlist(@PathVariable("id") Long customerId, @PathVariable("variant_id") Long variantId) {
+    @PutMapping("/{id}/add_item_to_wishlist/{jewelry_id}")
+    public ResponseEntity<?> addWishlistDetailToWishlist(@PathVariable("id") Long customerId, @PathVariable("jewelry_id") Long jewelryId) {
         try {
-            return customerService.addWishlistDetailToWishlist(customerId, variantId);
+            return customerService.addWishlistDetailToWishlist(customerId, jewelryId);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {

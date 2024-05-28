@@ -50,7 +50,7 @@ public class VariantService {
             variant.setJewelry_item(jewelryItem);
             variant.setName(jewelryItem.getName());
             variant.setQuantity(0);
-            variant.setPrice(0.0);
+            variant.setPrice(0);
             Variant savedVariant = variantRepository.save(variant);
 
             List<VariantOptionValue> variantOptionValues = optionValues.stream().map(optionValue -> {
@@ -73,9 +73,17 @@ public class VariantService {
         return variantRepository.findAllByJewelryItemId(jewelryItemId);
     }
 
+    @Transactional
     public ResponseEntity<?> updateVariant(Long variantId, VariantUpdateDTO variantUpdateDTO) {
         Variant variant = variantRepository.findById(variantId).orElseThrow(() -> new NotFoundException("Variant with id " + variantId + " does not exist"));
-        variantUpdateDTO.toEntity(variant);
+        JewelryItem jewelryItem = variant.getJewelry_item();
+        if (variantUpdateDTO.getPrice() != null)
+            variant.setPrice(variantUpdateDTO.getPrice());
+        if (variantUpdateDTO.getQuantity() != null) {
+            jewelryItem.setQuantity(jewelryItem.getQuantity() + variantUpdateDTO.getQuantity() - variant.getQuantity());
+            System.out.println(jewelryItem.getQuantity());
+            variant.setQuantity(variantUpdateDTO.getQuantity());
+        }
         variantRepository.save(variant);
         return ResponseEntity.ok("Variant updated successfully");
     }

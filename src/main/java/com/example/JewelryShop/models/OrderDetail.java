@@ -23,7 +23,7 @@ public class OrderDetail extends BaseModel {
     private Order order;
 
     @Column(name = "total_price")
-    private Double total_price;
+    private Integer total_price;
 
     @Column(name = "quantity")
     private Integer quantity;
