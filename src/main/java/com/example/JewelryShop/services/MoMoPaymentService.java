@@ -1,6 +1,7 @@
 package com.example.JewelryShop.services;
 
 import com.example.JewelryShop.dtos.IpnMoMoWebhookDTO;
+import com.example.JewelryShop.models.Order;
 import com.example.JewelryShop.utils.HmacSHA256Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -27,13 +28,15 @@ import java.util.Map;
 
 @Service
 public class MoMoPaymentService {
+    @Autowired
+    private OrderService orderService;
 
-    public ResponseEntity<?> ipnMoMoWebhook(IpnMoMoWebhookDTO ipnMoMoWebhookDTO) {
+    public String ipnMoMoWebhook(IpnMoMoWebhookDTO ipnMoMoWebhookDTO) {
         System.out.println("IPN MoMo Webhook: " + ipnMoMoWebhookDTO.getOrderId());
-        return ResponseEntity.ok().build();
+        return ipnMoMoWebhookDTO.getOrderId();
     }
 
-    public String createPayment() throws Exception {
+    public String createPayment(Long id) throws Exception {
 //        OkHttpClient client = new OkHttpClient().newBuilder()
 //                .build();
 //        MediaType mediaType = MediaType.parse("application/json");
@@ -47,16 +50,18 @@ public class MoMoPaymentService {
 //        return response.body().string();
 //    }
 
+        Order order = orderService.getOrderById(id);
 
         String partnerCode = "MOMO";
         String accessKey = "F8BBA842ECF85";
         String secretKey = "K951B6PE1waDMi640xX08PD3vg6EkVlz";
         String requestId = partnerCode + new Date().getTime();
-        String orderId = requestId;
+        String orderId = order.getCode();
         String orderInfo = "pay with MoMo";
         String redirectUrl = "https://momo.vn/return";
         String ipnUrl = "https://50dq8bhk-8080.asse.devtunnels.ms/api/payment/ipn_momo_webhook";
-        String amount = "50000";
+        String amount = order.getAmount().toString();
+        System.out.println("Amount: " + amount);
         String requestType = "captureWallet";
         String order_id = "{\"orderId\":" + orderId + "}";
         String extraData = Base64.getEncoder().encodeToString(order_id.getBytes());
@@ -101,8 +106,7 @@ public class MoMoPaymentService {
             try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
                 HttpEntity entity = response.getEntity();
                 if (entity != null) {
-                    String responseBody = EntityUtils.toString(entity);
-                    return responseBody;
+                    return EntityUtils.toString(entity);
                 }
             }
         }

@@ -14,9 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @Validated
@@ -32,6 +31,17 @@ public class OrderService {
     @Autowired
     private ModelMapper modelMapper;
 
+    public static String generateOrderCode(Order order) {
+        String PREFIX = "ORD";
+        int RANDOM_BOUND = 1000;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String timestamp = dateFormat.format(new Date());
+
+        String idPart = String.format("%04d", order.getId()); // Zero-padded ID
+        System.out.println(PREFIX + timestamp + idPart);
+        return PREFIX + timestamp + idPart;
+    }
+
     public List<Order> getOrders() {
         return orderRepository.findAll();
     }
@@ -41,7 +51,7 @@ public class OrderService {
     }
 
     @Transactional
-    public ResponseEntity<?> addNewOrder(@Valid OrderDTO orderDTO) {
+    public Order addNewOrder(@Valid OrderDTO orderDTO) {
         Order order = orderDTO.toEntity();
         List<OrderDetail> listOrderDetail = new ArrayList<>();
         for (OrderDetailDTO orderDetailDTO : orderDTO.getOrdered_items()) {
@@ -69,10 +79,13 @@ public class OrderService {
         order.setContact(shippingContact);
         PaymentMethod paymentMethod = paymentMethodRepository.findById(orderDTO.getPayment_method()).orElseThrow(() -> new NotFoundException("Could not find payment method with id " + orderDTO.getPayment_method()));
         order.setPaymentMethod(paymentMethod);
-        orderRepository.save(order);
-        customer.getOrder_history().add(order);
+        System.out.println(paymentMethod.getType());
+        Order savedOrder = orderRepository.save(order);
+        order.setCode(generateOrderCode(savedOrder));
+        orderRepository.save(savedOrder);
+        customer.getOrder_history().add(savedOrder);
         customerRepository.save(customer);
-        return ResponseEntity.ok("Order created successfully");
+        return savedOrder;
     }
 
     public ResponseEntity<?> updateOrderStatus(Long id, @Valid String status) {

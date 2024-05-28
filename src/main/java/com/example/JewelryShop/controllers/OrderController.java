@@ -47,7 +47,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addNewOrder(@RequestBody @Valid OrderDTO orderDTO) {
+    public Order addNewOrder(@RequestBody @Valid OrderDTO orderDTO) {
         try {
             return orderService.addNewOrder(orderDTO);
         } catch (NotFoundException e) {

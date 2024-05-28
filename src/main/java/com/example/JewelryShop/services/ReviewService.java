@@ -63,10 +63,16 @@ public class ReviewService {
         return ResponseEntity.ok().body("Review deleted successfully");
     }
 
+    @Transactional
     public ResponseEntity<?> updateReview(Long id, ReviewDTO reviewDTO) {
         Review review = reviewRepository.findById(id).orElseThrow(() -> new NotFoundException("Review with id " + id + " not found"));
-        review.setText(reviewDTO.getText());
-        review.setRating(reviewDTO.getRating());
+        if (reviewDTO.getText() != null)
+            review.setText(reviewDTO.getText());
+        if (reviewDTO.getRating() != null) {
+            review.setRating(reviewDTO.getRating());
+            JewelryItem jewelryItem = review.getJewelry_item();
+            jewelryItemService.updateJewelryRating(jewelryItem);
+        }
         reviewRepository.save(review);
         return ResponseEntity.ok().body("Review updated successfully");
     }

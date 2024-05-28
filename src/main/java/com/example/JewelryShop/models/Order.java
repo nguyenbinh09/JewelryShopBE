@@ -24,6 +24,9 @@ public class Order extends BaseModel {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+    @Column(name = "code", unique = true)
+    private String code;
+
     @Column(name = "completed_time")
     private Date completed_time;
 
@@ -31,11 +34,11 @@ public class Order extends BaseModel {
     private String status = "Ordering";
 
     @Column(name = "total_price")
-    private Double total_price = 0.0;
+    private Integer total_price = 0;
 
     @Column(name = "amount")
-    private Double amount = 0.0;
-    
+    private Integer amount = 0;
+
     @ManyToOne
     @JoinColumn(name = "payment_method_id")
     private PaymentMethod paymentMethod;
