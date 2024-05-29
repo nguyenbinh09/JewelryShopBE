@@ -47,6 +47,7 @@ public class CustomerService {
         customer.setWishlist(wishlistDetail);
         List<Order> orders = new ArrayList<>();
         customer.setOrder_history(orders);
+        customerRepository.save(customer);
     }
 
     public ResponseEntity<?> addWishlistDetailToWishlist(Long customerId, Long jewelryId) {
