@@ -24,7 +24,7 @@ public class ReviewController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @PostMapping(value = "/{jewelry_id}/comment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/comment", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addNewReview(@RequestPart("reviewJson") String reviewJson, @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         try {
             ReviewDTO reviewDTO = objectMapper.readValue(reviewJson, ReviewDTO.class);

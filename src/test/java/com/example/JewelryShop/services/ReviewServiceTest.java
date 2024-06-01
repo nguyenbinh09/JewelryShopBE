@@ -8,9 +8,11 @@ import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.Customer;
 import com.example.JewelryShop.models.JewelryItem;
 import com.example.JewelryShop.models.Review;
+import com.example.JewelryShop.models.User;
 import com.example.JewelryShop.repositories.CustomerRepository;
 import com.example.JewelryShop.repositories.JewelryItemRepository;
 import com.example.JewelryShop.repositories.ReviewRepository;
+import com.example.JewelryShop.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +29,7 @@ import java.util.Optional;
 class ReviewServiceTest {
 
     @Mock
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
 
     @Mock
     private JewelryItemRepository jewelryItemRepository;
@@ -48,14 +50,14 @@ class ReviewServiceTest {
     void addNewReview_ValidInput_ReturnsOkResponse() throws IOException {
         ReviewDTO reviewDTO = mock(ReviewDTO.class);
         List<MultipartFile> images = List.of(mock(MultipartFile.class));
-        Customer customer = new Customer();
+        User user = new User();
         JewelryItem jewelryItem = new JewelryItem();
         Review review = new Review();
 
-        when(reviewDTO.getCustomer_id()).thenReturn(1L);
+        when(reviewDTO.getUser_id()).thenReturn(1L);
         when(reviewDTO.getJewelry_item_id()).thenReturn(1L);
         when(reviewDTO.toEntity()).thenReturn(review);
-        when(customerRepository.findById(reviewDTO.getCustomer_id())).thenReturn(Optional.of(customer));
+        when(userRepository.findById(reviewDTO.getUser_id())).thenReturn(Optional.of(user));
         when(jewelryItemRepository.findById(reviewDTO.getJewelry_item_id())).thenReturn(Optional.of(jewelryItem));
         when(cloudinaryService.upload(any(MultipartFile.class))).thenReturn("image-url");
 
@@ -69,8 +71,8 @@ class ReviewServiceTest {
     @Test
     void addNewReview_InvalidCustomerId_ThrowsNotFoundException() {
         ReviewDTO reviewDTO = mock(ReviewDTO.class);
-        when(reviewDTO.getCustomer_id()).thenReturn(1L);
-        when(customerRepository.findById(reviewDTO.getCustomer_id())).thenReturn(Optional.empty());
+        when(reviewDTO.getUser_id()).thenReturn(1L);
+        when(userRepository.findById(reviewDTO.getUser_id())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> reviewService.addNewReview(reviewDTO, null));
     }
@@ -78,9 +80,9 @@ class ReviewServiceTest {
     @Test
     void addNewReview_InvalidJewelryItemId_ThrowsNotFoundException() {
         ReviewDTO reviewDTO = mock(ReviewDTO.class);
-        when(reviewDTO.getCustomer_id()).thenReturn(1L);
+        when(reviewDTO.getUser_id()).thenReturn(1L);
         when(reviewDTO.getJewelry_item_id()).thenReturn(1L);
-        when(customerRepository.findById(reviewDTO.getCustomer_id())).thenReturn(Optional.of(new Customer()));
+        when(userRepository.findById(reviewDTO.getUser_id())).thenReturn(Optional.of(new User()));
         when(jewelryItemRepository.findById(reviewDTO.getJewelry_item_id())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> reviewService.addNewReview(reviewDTO, null));

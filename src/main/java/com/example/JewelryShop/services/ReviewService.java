@@ -3,13 +3,11 @@ package com.example.JewelryShop.services;
 import com.example.JewelryShop.dtos.JewelryItemDTO;
 import com.example.JewelryShop.dtos.ReviewDTO;
 import com.example.JewelryShop.exceptions.NotFoundException;
-import com.example.JewelryShop.models.Customer;
-import com.example.JewelryShop.models.Image;
-import com.example.JewelryShop.models.JewelryItem;
-import com.example.JewelryShop.models.Review;
+import com.example.JewelryShop.models.*;
 import com.example.JewelryShop.repositories.CustomerRepository;
 import com.example.JewelryShop.repositories.JewelryItemRepository;
 import com.example.JewelryShop.repositories.ReviewRepository;
+import com.example.JewelryShop.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +21,7 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
     @Autowired
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
     @Autowired
     private JewelryItemRepository jewelryItemRepository;
     @Autowired
@@ -33,10 +31,10 @@ public class ReviewService {
 
     @Transactional
     public ResponseEntity<?> addNewReview(ReviewDTO reviewDTO, List<MultipartFile> images) {
-        Customer customer = customerRepository.findById(reviewDTO.getCustomer_id()).orElseThrow(() -> new NotFoundException("Customer with id " + reviewDTO.getCustomer_id() + " not found"));
+        User user = userRepository.findById(reviewDTO.getUser_id()).orElseThrow(() -> new NotFoundException("User with email " + reviewDTO.getUser_id() + " not found"));
         JewelryItem jewelryItem = jewelryItemRepository.findById(reviewDTO.getJewelry_item_id()).orElseThrow(() -> new NotFoundException("JewelryItem with id " + reviewDTO.getJewelry_item_id() + " not found"));
         Review review = reviewDTO.toEntity();
-        review.setCustomer(customer);
+        review.setUser(user);
         review.setJewelry_item(jewelryItem);
         if (images != null) {
             for (MultipartFile image : images) {
