@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 public class ReviewDTO {
-    private Long customer_id;
+    private Long user_id;
     private Long jewelry_item_id;
     private String text;
     private Float rating;

@@ -13,10 +13,9 @@ import java.util.List;
 @Data
 @Table
 public class Review extends BaseModel {
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
