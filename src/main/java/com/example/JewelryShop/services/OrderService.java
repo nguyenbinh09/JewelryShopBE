@@ -46,6 +46,10 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    public Order getOrderByCode(String code) {
+        return orderRepository.findByOrderCode(code).orElseThrow(() -> new NotFoundException("Could not find order with code " + code));
+    }
+
     public Order getOrderById(Long id) {
         return orderRepository.findById(id).orElseThrow(() -> new NotFoundException("Could not find order with id " + id));
     }
@@ -79,7 +83,6 @@ public class OrderService {
         order.setContact(shippingContact);
         PaymentMethod paymentMethod = paymentMethodRepository.findById(orderDTO.getPayment_method()).orElseThrow(() -> new NotFoundException("Could not find payment method with id " + orderDTO.getPayment_method()));
         order.setPaymentMethod(paymentMethod);
-        System.out.println(paymentMethod.getType());
         Order savedOrder = orderRepository.save(order);
         order.setCode(generateOrderCode(savedOrder));
         orderRepository.save(savedOrder);
