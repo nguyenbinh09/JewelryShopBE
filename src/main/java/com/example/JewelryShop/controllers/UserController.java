@@ -6,6 +6,7 @@ import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.User;
 import com.example.JewelryShop.services.UserService;
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -60,9 +61,9 @@ public class UserController {
     }
 
     @PutMapping(path = "{userId}/add_employee")
-    public ResponseEntity<?> addEmployee(@PathVariable("userId") Long userId) {
+    public ResponseEntity<?> addEmployee(@PathVariable("userId") Long userId, @PathParam("roleId") Long roleId) {
         try {
-            return userService.addEmployee(userId);
+            return userService.addEmployee(userId, roleId);
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {

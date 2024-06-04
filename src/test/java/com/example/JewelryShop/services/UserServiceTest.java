@@ -131,8 +131,10 @@ class UserServiceTest {
         User user = new User();
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
+        Long roleId = 1L;
+
         // Act
-        ResponseEntity<?> response = userService.addEmployee(userId);
+        ResponseEntity<?> response = userService.addEmployee(userId, roleId);
 
         // Assert
         assertEquals(ResponseEntity.ok("Employee added successfully"), response);
@@ -146,9 +148,10 @@ class UserServiceTest {
         Long userId = 1L;
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
+        Long roleId = 1L;
         // Act & Assert
         Exception exception = assertThrows(BadRequestException.class, () -> {
-            userService.addEmployee(userId);
+            userService.addEmployee(userId, roleId);
         });
         assertEquals("User with id " + userId + " does not exist", exception.getMessage());
     }

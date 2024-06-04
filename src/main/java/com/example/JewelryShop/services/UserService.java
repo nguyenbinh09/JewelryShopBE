@@ -6,6 +6,7 @@ import com.example.JewelryShop.exceptions.InternalServerErrorException;
 import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.User;
 import com.example.JewelryShop.repositories.CustomerRepository;
+import com.example.JewelryShop.repositories.EmployeeRepository;
 import com.example.JewelryShop.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -28,6 +29,8 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private CustomerService customerService;
+    @Autowired
+    private EmployeeService employeeService;
 
     public List<User> getUsers() {
         return userRepository.findAll();
@@ -58,9 +61,11 @@ public class UserService {
         return ResponseEntity.ok("User deleted successfully");
     }
 
-    public ResponseEntity<?> addEmployee(Long userId) {
+    @Transactional
+    public ResponseEntity<?> addEmployee(Long userId, Long roleId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new BadRequestException("User with id " + userId + " does not exist"));
         user.setIs_employee(true);
+        employeeService.addEmployee(user.getId(), roleId);
         userRepository.save(user);
         return ResponseEntity.ok("Employee added successfully");
     }

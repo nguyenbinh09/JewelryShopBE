@@ -1,6 +1,7 @@
 package com.example.JewelryShop.services;
 
 import com.example.JewelryShop.dtos.IpnMoMoWebhookDTO;
+import com.example.JewelryShop.exceptions.NotFoundException;
 import com.example.JewelryShop.models.Order;
 import com.example.JewelryShop.utils.HmacSHA256Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,8 +33,14 @@ public class MoMoPaymentService {
     private OrderService orderService;
 
     public String ipnMoMoWebhook(IpnMoMoWebhookDTO ipnMoMoWebhookDTO) {
-        System.out.println("IPN MoMo Webhook: " + ipnMoMoWebhookDTO.getOrderId());
-        return ipnMoMoWebhookDTO.getOrderId();
+        System.out.println("IPN MoMo Webhook: " + ipnMoMoWebhookDTO.getOrderCode());
+        Order order = orderService.getOrderByCode(ipnMoMoWebhookDTO.getOrderCode());
+        if (order == null) {
+            throw new NotFoundException("Order with code " + ipnMoMoWebhookDTO.getOrderCode() + " not found");
+        } else {
+            orderService.updateOrderStatus(order.getId(), "PAID");
+        }
+        return ipnMoMoWebhookDTO.getOrderCode();
     }
 
     public String createPayment(Long id) throws Exception {
