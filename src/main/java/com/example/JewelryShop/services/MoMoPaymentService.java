@@ -65,10 +65,10 @@ public class MoMoPaymentService {
         String requestId = partnerCode + new Date().getTime();
         String orderId = order.getCode();
         String orderInfo = "pay with MoMo";
-        String redirectUrl = "https://momo.vn/return";
-        String ipnUrl = "https://50dq8bhk-8080.asse.devtunnels.ms/api/payment/ipn_momo_webhook";
+        String redirectUrl = "https://jewelry-shop-1808nha.web.app/order-detail/" + order.getId();
+        String ipnUrl = "https://jewelryshopbe-production.up.railway.app/api/payment/ipn_momo_webhook";
         String amount = order.getAmount().toString();
-        System.out.println("Amount: " + amount);
+//        String amount = "50000";
         String requestType = "captureWallet";
         String order_id = "{\"orderId\":" + orderId + "}";
         String extraData = Base64.getEncoder().encodeToString(order_id.getBytes());
