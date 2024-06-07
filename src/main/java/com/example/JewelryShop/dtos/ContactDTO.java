@@ -17,4 +17,14 @@ public class ContactDTO {
         contact.setAddress(this.address);
         return contact;
     }
+
+    public Contact toEntity(Contact contact) {
+        if (this.email != null)
+            contact.setEmail(this.email);
+        if (this.phone != null)
+            contact.setPhone(this.phone);
+        if (this.address != null)
+            contact.setAddress(this.address);
+        return contact;
+    }
 }
