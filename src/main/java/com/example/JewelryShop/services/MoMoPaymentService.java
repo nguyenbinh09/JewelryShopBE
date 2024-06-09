@@ -33,14 +33,15 @@ public class MoMoPaymentService {
     private OrderService orderService;
 
     public String ipnMoMoWebhook(IpnMoMoWebhookDTO ipnMoMoWebhookDTO) {
-        System.out.println("IPN MoMo Webhook: " + ipnMoMoWebhookDTO.getOrderCode());
-        Order order = orderService.getOrderByCode(ipnMoMoWebhookDTO.getOrderCode());
+        System.out.println("IPN MoMo Webhook: " + ipnMoMoWebhookDTO.getOrderId());
+        Order order = orderService.getOrderByCode(ipnMoMoWebhookDTO.getOrderId());
         if (order == null) {
-            throw new NotFoundException("Order with code " + ipnMoMoWebhookDTO.getOrderCode() + " not found");
+            throw new NotFoundException("Order with code " + ipnMoMoWebhookDTO.getOrderId() + " not found");
         } else {
             orderService.updateOrderStatus(order.getId(), "PAID");
         }
-        return ipnMoMoWebhookDTO.getOrderCode();
+        System.out.println(order.getStatus());
+        return ipnMoMoWebhookDTO.getOrderId();
     }
 
     public String createPayment(Long id) throws Exception {
