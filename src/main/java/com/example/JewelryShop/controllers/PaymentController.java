@@ -39,6 +39,7 @@ public class PaymentController {
     @PostMapping("/ipn_momo_webhook")
     public String ipnMoMoWebhook(@RequestBody IpnMoMoWebhookDTO ipnMoMoWebhookDTO) {
         try {
+            System.out.println("IPN MoMo Webhook: " + ipnMoMoWebhookDTO.getOrderId());
             return moMoPaymentService.ipnMoMoWebhook(ipnMoMoWebhookDTO);
         } catch (Exception e) {
             throw new InternalServerErrorException(e.getMessage());
