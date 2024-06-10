@@ -15,8 +15,9 @@ Dự án này là hệ thống backend được sử dụng để tạo các RES
    ```bash
    git clone https://github.com/nguyenbinh09/JewelryShopBE.git
    cd JewelryShopBE
-OR
-Giải nén file .zip đã tải từ repository.
+   ```text
+   OR
+   Giải nén file .zip đã tải từ repository.
 2. Cấu hình cơ sở dữ liệu trong src/main/resources/application.properties:
    ```properties
    spring.datasource.url=jdbc:mysql://localhost:3306/yourdatabase
