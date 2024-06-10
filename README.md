@@ -6,7 +6,7 @@ Dự án này là hệ thống backend được sử dụng để tạo các RES
 ## Cài Đặt
 
 ### Yêu Cầu
-- Java 11+
+- Java 17
 - Maven 4.0.0
 - MySQL 8+
 
