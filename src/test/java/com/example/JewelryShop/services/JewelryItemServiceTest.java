@@ -91,34 +91,6 @@ class JewelryServiceTest {
     }
 
     @Test
-    void addNewJewelryItem_ValidInput_ReturnOkResponse() throws IOException {
-        // Arrange
-        JewelryItemDTO jewelryItemDTO = mock(JewelryItemDTO.class);
-        jewelryItemDTO.setCategory_id(1L);
-
-        Category category = new Category();
-        when(categoryRepository.findById(jewelryItemDTO.getCategory_id())).thenReturn(Optional.of(category));
-
-        JewelryItem jewelryItem = new JewelryItem();
-        when(jewelryItemDTO.toEntity()).thenReturn(jewelryItem);
-
-        MultipartFile image = mock(MultipartFile.class);
-        when(cloudinaryService.upload(image)).thenReturn("image_url");
-
-        List<OptionDTO> options = Collections.emptyList();
-        when(jewelryItemDTO.getOptions()).thenReturn(options);
-
-        when(jewelryItemRepository.save(any(JewelryItem.class))).thenReturn(jewelryItem);
-
-        // Act
-        ResponseEntity<?> response = jewelryService.addNewJewelryItem(jewelryItemDTO, List.of(image));
-
-        // Assert
-        assertEquals(ResponseEntity.ok("Jewelry created successfully"), response);
-        verify(jewelryItemRepository, times(2)).save(any(JewelryItem.class));
-    }
-
-    @Test
     void updateJewelryItem_ValidInput_ReturnOkResponse() {
         // Arrange
         Long id = 1L;

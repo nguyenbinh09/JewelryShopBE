@@ -56,8 +56,8 @@ public class JewelryItemController {
     }
 
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addNewJewelryItem(@RequestPart("jewelryItem") String jewelryItemJson,
-                                               @RequestPart("images") List<MultipartFile> images
+    public JewelryItem addNewJewelryItem(@RequestPart("jewelryItem") String jewelryItemJson,
+                                         @RequestPart("images") List<MultipartFile> images
     ) throws JsonProcessingException {
         JewelryItemDTO jewelryItemDTO = objectMapper.readValue(jewelryItemJson, JewelryItemDTO.class);
         try {
