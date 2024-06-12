@@ -56,7 +56,7 @@ public class JewelryItemService {
     }
 
     @Transactional
-    public ResponseEntity<?> addNewJewelryItem(@Valid JewelryItemDTO jewelryItemDTO, List<MultipartFile> images) throws IOException {
+    public JewelryItem addNewJewelryItem(@Valid JewelryItemDTO jewelryItemDTO, List<MultipartFile> images) throws IOException {
         Optional<Category> category = categoryRepository.findById(jewelryItemDTO.getCategory_id());
         if (category.isEmpty()) {
             throw new NotFoundException("Category with id " + jewelryItemDTO.getCategory_id() + " does not exist");
@@ -78,7 +78,7 @@ public class JewelryItemService {
         JewelryItem jewelryItemSaved = jewelryItemRepository.save(jewelryItem);
         jewelryItem.setSku_code(generateSku(jewelryItemSaved));
         jewelryItemRepository.save(jewelryItemSaved);
-        return ResponseEntity.ok("Jewelry created successfully");
+        return jewelryItemSaved;
     }
 
     @Transactional
